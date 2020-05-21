@@ -22,7 +22,7 @@ export class ItemList extends Component {
             )
         }
 
-        return renderList(this.props.items);
+        return !this.props.err ? renderList(this.props.items) : <p>Failed to fetch</p>;
     }
 }
 
@@ -32,8 +32,8 @@ ItemList.propTypes = {
 };
 
 export const getFiltredList = createSelector(
-    state => state.items,
-    items => items.filter(item => {
+    (state) => state.items,
+    (items, err) => items.filter((item) => {
         item.children = [];
         for (let child of items) {
             if (item.id === child.parent_id) {
@@ -52,6 +52,7 @@ export const getFiltredList = createSelector(
 const mapStateToProps = (state) => {
     return {
         items: getFiltredList(state),
+        err: state.err
     };
 };
 
